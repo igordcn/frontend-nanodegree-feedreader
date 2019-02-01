@@ -4,7 +4,7 @@ O projeto consiste na elaboração de _Suites de Teste_ para aplicação [Feed R
 
 ## Tabela de Conteúdos
 
-- [Instalação](#instação)
+- [Instalação](#instalação)
 - [Execução](#execução)
 
 ## Instalação
