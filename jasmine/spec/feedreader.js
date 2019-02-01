@@ -9,27 +9,25 @@
  * to ensure they don't run until the DOM is ready.
  */
 $(function() {
-    /* This is our first test suite - a test suite just contains
-    * a related set of tests. This suite is all about the RSS
-    * feeds definitions, the allFeeds variable in our application.
+
+    /* Suit de testes relacionados a variável allFeeds, que contém
+    * um nome e uma url de requisição para cada feed. É a partir
+    * dessa variável que a aplicação sabe onde buscar os feeds.
+    * Sua correta definição é essencial para o bom funcionamento da
+    * principal funcionalidade da aplicação. 
     */
     describe('RSS Feeds', function() {
-        /* This is our first test - it tests to make sure that the
-         * allFeeds variable has been defined and that it is not
-         * empty. Experiment with this before you get started on
-         * the rest of this project. What happens when you change
-         * allFeeds in app.js to be an empty array and refresh the
-         * page?
+
+        /* Teste para verificar se o allFeeds está definido e se é
+         * não é um array vazio.
          */
         it('definidos', function() {
             expect(allFeeds).toBeDefined();
             expect(allFeeds.length).not.toBe(0);
         });
 
-
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a URL defined
-         * and that the URL is not empty.
+        /* Teste para verificar se todas as urls de feeds contidas
+         * em allFeeds estão definidas e não são strings vazias.
          */
         it('urls definidas', function(){
             for(const feed of allFeeds){
@@ -38,10 +36,8 @@ $(function() {
             }
         });
 
-
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a name defined
-         * and that the name is not empty.
+        /* Teste para verificar se todos os nomes de feeds contidos
+         * em allFeeds estão definidos e não são strings vazias.
          */
         it('nomes definidos', function(){
             for(const feed of allFeeds){
@@ -52,21 +48,27 @@ $(function() {
     });
 
 
-    /* TODO: Write a new test suite named "The menu" */
+    /* Suit de testes para verificar o estado do menu lateral
+     * quando se inicia a aplicação e quando se aciona o botão
+     * de apresentação/ocultação do menu.
+     */
     describe("O menu", function(){
-        /* TODO: Write a test that ensures the menu element is
-         * hidden by default. You'll have to analyze the HTML and
-         * the CSS to determine how we're performing the
-         * hiding/showing of the menu element.
+        
+        /* Teste que verifica se o menu está escondido inicialmente.
+         * Obs: A apresentação e a ocultação do menu são realizadas
+         * por, respectivamente, remover e adicionar a classe
+         * menu-hidden do body. Assim, quando essa classe está
+         * presente, o menu se encontra oculto.
          */
         it('escondido por default', function(){
             expect($('body').hasClass('menu-hidden')).toBe(true);
         });
-         /* TODO: Write a test that ensures the menu changes
-          * visibility when the menu icon is clicked. This test
-          * should have two expectations: does the menu display when
-          * clicked and does it hide when clicked again.
-          */
+
+        /* Teste para verificar o correto funcionamento do botão de
+         * apresentação/ocultação do menu. Para isso, foi necessário
+         * simular o clique do botão através da chamada do método
+         * triggerHandler com o parâmetro 'click'.
+         */
         it('visivel ao clicar', function(){
             $('.menu-icon-link').triggerHandler('click');
             expect($('body').hasClass('menu-hidden')).toBe(false);
@@ -74,29 +76,50 @@ $(function() {
             expect($('body').hasClass('menu-hidden')).toBe(true);
         });
     });
-    /* TODO: Write a new test suite named "Initial Entries" */
+
+    /* Suit de testes que verifica se os registros iniciais foram
+     * carregados.
+     */
     describe('Initial Entries', function(){
 
+        /* Como loadFeed é uma função assíncrona, ela precisa ser
+         * executada com antecedência para a realização dos testes.
+         * done() sinaliza o termino de sua execução para o início
+         * dos testes.
+         */
         beforeEach(function(done){
             loadFeed(0, function(){
                 done();
             });
         });
-        /* TODO: Write a test that ensures when the loadFeed
-         * function is called and completes its work, there is at least
-         * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test will require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
+
+        /* Verifica se após a chamada de loadFeed, houve pelo menos
+         * um registro carregado. 
          */
         it('existe pelo menos um elemento .entry', function(done){
             expect($('.feed .entry').length).toBeGreaterThanOrEqual(1);
             done();
         });
     });
-    /* TODO: Write a new test suite named "New Feed Selection" */
+
+    /* Suit de testes que verifica se um novo feed (um novo 
+     * conteúdo) é carregado após ser selecionado.   
+     */
     describe('New Feed Selection', function(){
+        
+        /* Variáveis responsáveis por armazenar o estado dos
+         * registros (o conteúdo atual).
+         */
         let content, changedContent;
 
+        /* loadFeed(0, function) carrega os registros iniciais.
+         * Após seu termino, o contéudo dos registros é salvo
+         * na variável content e logo em seguida, um novo feed é
+         * carregado com loadFeed(1, function). Como no anterior,
+         * o estado dos registros é armazenado (agora, na variável
+         * changedContent). E no final done() é chamado para sinalizar
+         * a finalização da função assíncrona. 
+         */
         beforeEach(function(done){
             loadFeed(0, function(){
                 content = $('.feed .entry');
@@ -106,13 +129,12 @@ $(function() {
                 });
             });
         });
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
+
+        /* Teste que verifica se houve mudança no contéudo
+         * da página após a seleção de um novo feed.
          */
         it('O conteudo mudou', function(done){
             expect(content).not.toEqual(changedContent);
-            console.log(content);
             done();
         });
     });
